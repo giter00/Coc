@@ -12,7 +12,7 @@ Python: 3.8.0
 ```
 
 ## Packages
-- Tensorflow (2.7.0)
+- Tensorflow-GPU (2.7.0)
 - scikit-learn (1.1.1)
 - tadpak (0.3.3)
 - tqdm (4.64.0)
