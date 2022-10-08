@@ -5,11 +5,11 @@ This is the implementation of our paper 'Coc & Drop-Loss: Rectify the Unexpected
 
 The code is tested under the following basic environments:
 
-'''
+```
 GPU: RTX 3060 6G
 Cuda: 11.7
 Python: 3.8.0
-'''
+```
 
 ## Packages
 - Tensorflow (2.7.0)
@@ -23,6 +23,6 @@ Python: 3.8.0
 
 You can install the dependencies
 
-'''bash
+```bash
 pip install -r requirements.txt
 ```
