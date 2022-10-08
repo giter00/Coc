@@ -4,10 +4,11 @@ This is the implementation of our paper 'Coc & Drop-Loss: Rectify the Unexpected
 # Get Started
 
 The code is tested under the following basic environments:
+
 '''
 GPU: RTX 3060 6G
-Cuda: 11.6
-Python: 3.8
+Cuda: 11.7
+Python: 3.8.0
 '''
 
 ## Packages
@@ -18,8 +19,10 @@ Python: 3.8
 - matplotlib (3.5.1)
 - pandas (1.4.3)
 - numpy (1.22.4)
+- scipy (1.8.0)
 
 You can install the dependencies
+
 '''bash
 pip install -r requirements.txt
 ```
