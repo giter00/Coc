@@ -182,8 +182,9 @@ class Tan(Model):
             for epoch in tf.range(self.dis_epochs[i]):
                 for x in train_db_:
                     with tf.GradientTape() as dis_tape:
-                        loss_1 = -tf.reduce_mean(tf.reduce_mean(tf.abs(self.disc(self.gen(x)) - self.disc(x)), axis=1),
-                                                 axis=0)
+#                         loss_1 = -tf.reduce_mean(tf.reduce_mean(tf.abs(self.disc(self.gen(x)) - self.disc(x)), axis=1),
+#                                                  axis=0)
+                        loss_1 = -self.drop_loss(self.disc(self.gen(x)), self.disc(x), self.k)
                     dis_gradients = dis_tape.gradient(loss_1, self.disc.trainable_variables)
                     self.d_optimizer.apply_gradients(zip(dis_gradients, self.disc.trainable_variables))
                 self.d_loss.append(tf.reduce_mean(loss_1))
