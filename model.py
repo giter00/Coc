@@ -168,7 +168,7 @@ class Tan(Model):
 
     @tf.function
     def latent_generator(self, latent):
-
+        # generate virtual anomaly samples
         def l_generator(latent_, std=self.std):
             delta = latent_[1:, :] - latent_[:-1, :]
             logits = latent_[:-1, :] + tf.multiply(delta, tf.random.normal(delta.shape, stddev=std))
@@ -180,26 +180,27 @@ class Tan(Model):
     def train(self, train_db_):
         for i in tqdm(range(len(self.dis_epochs))):
             for epoch in tf.range(self.dis_epochs[i]):
+                
+                # training of discriminator
                 for x in train_db_:
                     with tf.GradientTape() as dis_tape:
-#                         loss_1 = -tf.reduce_mean(tf.reduce_mean(tf.abs(self.disc(self.gen(x)) - self.disc(x)), axis=1),
-#                                                  axis=0)
                         loss_1 = -self.drop_loss(self.disc(self.gen(x)), self.disc(x), self.k)
                     dis_gradients = dis_tape.gradient(loss_1, self.disc.trainable_variables)
                     self.d_optimizer.apply_gradients(zip(dis_gradients, self.disc.trainable_variables))
                 self.d_loss.append(tf.reduce_mean(loss_1))
-
+                
+                # calibrate the overconfidence
                 for x in train_db_:
                     with tf.GradientTape() as r:
                         latent = self.gen.en_call(x, trainable=True)
-
                         samples = self.latent_generator(latent)
                         out_r = self.gen.de_call(samples, trainable=True)
                         mae_r = tf.reduce_mean(tf.reduce_mean(tf.abs(out_r - self.line), axis=1), axis=0)
                     r_gradients = r.gradient(mae_r, self.gen.decoder.trainable_variables)
                     self.r_optimizer.apply_gradients(zip(r_gradients, self.gen.decoder.trainable_variables))
                 self.dist.append(tf.reduce_mean(mae_r))
-
+    
+            # reconstruction training of AE
             for epoch in tf.range(self.gen_epochs[i]):
                 for x in train_db_:
                     with tf.GradientTape() as joint_tape:
